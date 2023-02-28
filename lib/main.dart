@@ -386,18 +386,21 @@ class CalculatorButton extends StatelessWidget {
               : null,
     );
 
+    final buttonBorderRadius = BorderRadius.circular(10000);
+
     return Expanded(
       flex: flex,
       child: Padding(
         padding: const EdgeInsets.all(6.0),
         child: Material(
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10000))),
+          shape: RoundedRectangleBorder(borderRadius: buttonBorderRadius),
           color: color,
           child: isDisabled
               ? Container(
                   child: child,
                 )
               : InkWell(
+                  borderRadius: buttonBorderRadius,
                   onTap: action,
                   onLongPress: longTapAction,
                   child: child,
