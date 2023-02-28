@@ -13,7 +13,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Лаб 3 Сивков',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.dark(
+          background: Colors.black,
+          primary: Colors.grey.shade800,
+          secondary: Colors.orange,
+          tertiary: Colors.grey,
+        ),
       ),
       home: const MyHomePage(title: '[РМиМП-1] Лаб 3. Сивков'),
     );
@@ -30,9 +35,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String inputText = "0";
+  String firstText = "0";
+  String secondText = "";
+  String selectedOperation = '';
 
-  final RegExp validInputTextRegex = RegExp(r"^(|(-)|(-?\d+\.?\d*)|(-?\d+\.?\d*)([+\-*/])|(-?\d+\.?\d*)([+\-*/])(-?\d+\.?\d*))$");
+  final RegExp validInputTextRegex =
+      RegExp(r"^(|(-)|(-?\d+\.?\d*)|(-?\d+\.?\d*)([+\-*/])|(-?\d+\.?\d*)([+\-*/])(-?\d+\.?\d*))$");
   final RegExp wellFormedInputTextRegex = RegExp(r"^((-?\d+\.?\d*)([+\-*/])(-?\d+\.?\d*))$");
 
   final NumberFormat resultNumberFormat = NumberFormat()
@@ -41,207 +49,263 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('selectedOperation = "$selectedOperation", firstText = "$firstText", secondText = "$secondText"');
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(48.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
                 width: double.infinity,
-                height: 48,
-                child: FittedBox(
-                  child: Text(
-                    inputText,
-                    style: const TextStyle(fontSize: 40),
+                height: 100,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: FittedBox(
+                    child: Text(
+                      selectedOperation != '' && secondText != '' ? secondText : firstText,
+                      style: const TextStyle(fontSize: 64),
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              GridView.count(
-                crossAxisCount: 3,
-                childAspectRatio: 1.2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  CalculatorButton(
-                    text: '7',
-                    action: () {
-                      appendText('7');
-                    },
+              AspectRatio(
+                aspectRatio: 4 / 5,
+                child: Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            CalculatorButton(
+                              flex: 2,
+                              text: 'AC',
+                              type: CalculatorButtonType.other,
+                              action: clearAll,
+                            ),
+                            CalculatorButton(
+                              text: '±',
+                              type: CalculatorButtonType.other,
+                              action: changeSign,
+                            ),
+                            CalculatorButton(
+                              text: '/',
+                              type: CalculatorButtonType.operation,
+                              operationSelected: selectedOperation == '/',
+                              action: () {
+                                setState(() {
+                                  if (firstText != 'Ошибка') {
+                                    selectedOperation = '/';
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            CalculatorButton(
+                              text: '7',
+                              action: () {
+                                appendText('7');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '8',
+                              action: () {
+                                appendText('8');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '9',
+                              action: () {
+                                appendText('9');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '*',
+                              type: CalculatorButtonType.operation,
+                              operationSelected: selectedOperation == '*',
+                              action: () {
+                                setState(() {
+                                  if (firstText != 'Ошибка') {
+                                    selectedOperation = '*';
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            CalculatorButton(
+                              text: '4',
+                              action: () {
+                                appendText('4');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '5',
+                              action: () {
+                                appendText('5');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '6',
+                              action: () {
+                                appendText('6');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '-',
+                              type: CalculatorButtonType.operation,
+                              operationSelected: selectedOperation == '-',
+                              action: () {
+                                setState(() {
+                                  if (firstText != 'Ошибка') {
+                                    selectedOperation = '-';
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            CalculatorButton(
+                              text: '1',
+                              action: () {
+                                appendText('1');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '2',
+                              action: () {
+                                appendText('2');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '3',
+                              action: () {
+                                appendText('3');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '+',
+                              type: CalculatorButtonType.operation,
+                              operationSelected: selectedOperation == '+',
+                              action: () {
+                                setState(() {
+                                  if (firstText != 'Ошибка') {
+                                    selectedOperation = '+';
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            CalculatorButton(
+                              text: '0',
+                              flex: 2,
+                              action: () {
+                                appendText('0');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: ',',
+                              action: () {
+                                appendText('.');
+                              },
+                            ),
+                            CalculatorButton(
+                              text: '=',
+                              type: CalculatorButtonType.operation,
+                              action: calculate,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  CalculatorButton(
-                    text: '8',
-                    action: () {
-                      appendText('8');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '9',
-                    action: () {
-                      appendText('9');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '4',
-                    action: () {
-                      appendText('4');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '5',
-                    action: () {
-                      appendText('5');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '6',
-                    action: () {
-                      appendText('6');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '1',
-                    action: () {
-                      appendText('1');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '2',
-                    action: () {
-                      appendText('2');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '3',
-                    action: () {
-                      appendText('3');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '.',
-                    action: () {
-                      appendText('.');
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '0',
-                    action: () {
-                      appendText('0');
-                    },
-                  ),
-                  CalculatorButton(
-                    icon: Icons.backspace,
-                    action: removeLastSymbol,
-                    longTapAction: clearAll,
-                  ),
-                ],
-              ),
-              GridView.count(
-                crossAxisCount: 3,
-                childAspectRatio: 1.2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  Container(),
-                  CalculatorButton(
-                    text: '+',
-                    action: () {
-                      appendText('+', replaceOnlyZero: false);
-                    },
-                  ),
-                  Container(),
-                  CalculatorButton(
-                    text: '*',
-                    action: () {
-                      appendText('*', replaceOnlyZero: false);
-                    },
-                  ),
-                  CalculatorButton(
-                    text: '±',
-                    action: changeSign,
-                  ),
-                  CalculatorButton(
-                    text: '/',
-                    action: () {
-                      appendText('/', replaceOnlyZero: false);
-                    },
-                  ),
-                  Container(),
-                  CalculatorButton(
-                    text: '-',
-                    action: () {
-                      appendText('-');
-                    },
-                  ),
-                  Container(),
-                ],
+                ),
               ),
             ],
           ),
         ),
       ),
-      floatingActionButton: wellFormedInputTextRegex.hasMatch(inputText)
-          ? FloatingActionButton(
-              onPressed: calculate,
-              child: const Text(
-                '=',
-                style: TextStyle(fontSize: 22),
-              ),
-            )
-          : null,
     );
   }
 
   void appendText(String text, {bool replaceOnlyZero = true}) {
     setState(() {
-      if (validInputTextRegex.hasMatch(inputText + text)) {
-        if (inputText == '0' && replaceOnlyZero) {
-          inputText = '';
+      if (selectedOperation == '') {
+        if (firstText == '0' && replaceOnlyZero) {
+          firstText = '';
         }
 
-        inputText += text;
+        firstText += text;
+      } else {
+        if (secondText == '0' && replaceOnlyZero) {
+          secondText = '';
+        }
+
+        secondText += text;
       }
     });
   }
 
   void removeLastSymbol() {
     setState(() {
-      if (inputText.isNotEmpty) {
-        inputText = inputText.substring(0, inputText.length - 1);
+      if (firstText.isNotEmpty) {
+        firstText = firstText.substring(0, firstText.length - 1);
       }
 
-      if (inputText.isEmpty || inputText == '-') {
-        inputText = '0';
+      if (firstText.isEmpty || firstText == '-') {
+        firstText = '0';
       }
     });
   }
 
   void clearAll() {
     setState(() {
-      inputText = '0';
+      firstText = '0';
+      secondText = '';
+      selectedOperation = '';
     });
   }
 
   void changeSign() {
+    if (firstText == 'Ошибка') return;
+
     setState(() {
-      if (inputText[0] == '-') {
-        inputText = inputText.substring(1);
+      if (firstText[0] == '-') {
+        firstText = firstText.substring(1);
       } else {
-        inputText = '-$inputText';
+        firstText = '-$firstText';
       }
     });
   }
 
   void calculate() {
-    final match = wellFormedInputTextRegex.firstMatch(inputText)!;
-    final a = double.parse(match.group(2)!);
-    final operation = match.group(3)!;
-    final b = double.parse(match.group(4)!);
+    final a = double.parse(firstText);
+    final operation = selectedOperation;
+    final b = double.parse(secondText);
 
     double result = 0;
     if (operation == '+') {
@@ -252,22 +316,23 @@ class _MyHomePageState extends State<MyHomePage> {
       result = a * b;
     } else if (operation == '/') {
       if (b == 0) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Делить на ноль нельзя!'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        setState(() {
+          clearAll();
+          firstText = 'Ошибка';
+        });
         return;
       }
       result = a / b;
     }
 
     setState(() {
-      inputText = resultNumberFormat.format(result);
+      clearAll();
+      firstText = resultNumberFormat.format(result);
     });
   }
 }
+
+enum CalculatorButtonType { number, operation, other }
 
 class CalculatorButton extends StatelessWidget {
   final String? text;
@@ -275,6 +340,9 @@ class CalculatorButton extends StatelessWidget {
   final void Function() action;
   final void Function()? longTapAction;
   final bool isDisabled;
+  final int flex;
+  final CalculatorButtonType type;
+  final bool operationSelected;
 
   const CalculatorButton({
     Key? key,
@@ -283,16 +351,30 @@ class CalculatorButton extends StatelessWidget {
     required this.action,
     this.longTapAction,
     this.isDisabled = false,
+    this.flex = 1,
+    this.type = CalculatorButtonType.number,
+    this.operationSelected = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).colorScheme.primary;
+    Color textColor = Colors.white;
+    if (operationSelected) {
+      color = Colors.white;
+      textColor = Theme.of(context).colorScheme.secondary;
+    } else if (type == CalculatorButtonType.operation) {
+      color = Theme.of(context).colorScheme.secondary;
+    } else if (type == CalculatorButtonType.other) {
+      color = Theme.of(context).colorScheme.tertiary;
+    }
+
     final child = Center(
       child: text != null
           ? Text(
               text!,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: textColor,
                 fontSize: 36,
               ),
             )
@@ -304,19 +386,23 @@ class CalculatorButton extends StatelessWidget {
               : null,
     );
 
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Material(
-        color: isDisabled ? Colors.grey : Colors.blue,
-        child: isDisabled
-            ? Container(
-                child: child,
-              )
-            : InkWell(
-                onTap: action,
-                onLongPress: longTapAction,
-                child: child,
-              ),
+    return Expanded(
+      flex: flex,
+      child: Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: Material(
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10000))),
+          color: color,
+          child: isDisabled
+              ? Container(
+                  child: child,
+                )
+              : InkWell(
+                  onTap: action,
+                  onLongPress: longTapAction,
+                  child: child,
+                ),
+        ),
       ),
     );
   }
